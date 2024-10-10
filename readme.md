@@ -4,7 +4,11 @@
 
 
 Additional resources: 
+</n>
 https://www.freecodecamp.org/news/the-basic-design-patterns-all-developers-need-to-know/
+
+</n>
+https://sbcode.net/typescript/
 
 </n>
 
