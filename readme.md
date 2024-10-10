@@ -15,4 +15,4 @@ https://refactoring.guru/design-patterns
 Go Patterns: https://github.com/tmrts/go-patterns
 
 
-![alt text](https://github.com/0xasimraza/Ts-DesignPatterns/blob/master/DesignPatterns.png?raw=true)
+![alt text](https://miro.medium.com/v2/resize:fit:720/format:webp/0*u3LvRB25YEbv_J2Y?raw=true)
