@@ -1,3 +1,4 @@
+
 class GeoCoder {
   getLatLng(address: string): string {
     if (address === "Amsterdam") {
