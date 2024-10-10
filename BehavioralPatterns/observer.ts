@@ -1,36 +1,113 @@
-class Click {
-  handlers: Function[] = [];
+// example 1
+// Observer Design Pattern Concept
 
-  subscribe(handler: Function): void {
-    this.handlers.push(handler);
+interface IObservable {
+  // The Subject Interface
+
+  subscribe(observer: IObserver): void
+  // The subscribe method
+
+  unsubscribe(observer: IObserver): void
+  // The unsubscribe method
+
+  notify(...args: unknown[]): void
+  // The notify method
+}
+
+class Subject implements IObservable {
+  // The Subject (a.k.a Observable)
+  #observers: Set<IObserver>
+  constructor() {
+    this.#observers = new Set()
   }
 
-  unsubscribe(handler: Function): void {
-    this.handlers = this.handlers.filter((e: Function) => e !== handler);
+  subscribe(observer: IObserver) {
+    this.#observers.add(observer)
   }
 
-  fire(message: string, scope?: any): void {
-    if (!scope) {
-      scope = this;
-    }
+  unsubscribe(observer: IObserver) {
+    this.#observers.delete(observer)
+  }
 
-    this.handlers.forEach((e: Function) => e.call(scope, message));
+  notify(...args: unknown[]) {
+    this.#observers.forEach((observer) => {
+      observer.notify(...args)
+    })
   }
 }
 
-class Application {
-  main(): void {
-    const callback = (message: string) => {
-      console.log(message);
-    };
+interface IObserver {
+  // A method for the Observer to implement
 
-    const click = new Click();
+  notify(...args: unknown[]): void
+  // Receive notifications"
+}
 
-    click.subscribe(callback);
-    click.fire("event 1");
-    click.unsubscribe(callback);
-    click.fire("event 2");
-    click.subscribe(callback);
-    click.fire("event 3");
+class Observer implements IObserver {
+  // The concrete observer
+  #id: number
+
+  constructor(observable: IObservable) {
+    this.#id = COUNTER++
+    observable.subscribe(this)
+  }
+
+  notify(...args: unknown[]) {
+    console.log(
+      `OBSERVER_${this.#id} received ${JSON.stringify(args)}`
+    )
   }
 }
+
+// The Client
+let COUNTER = 1 // An ID to help distinguish between objects
+
+const SUBJECT = new Subject()
+const OBSERVER_1 = new Observer(SUBJECT)
+const OBSERVER_2 = new Observer(SUBJECT)
+
+SUBJECT.notify('First Notification', [1, 2, 3])
+
+// Unsubscribe OBSERVER_2
+SUBJECT.unsubscribe(OBSERVER_2)
+
+SUBJECT.notify('Second Notification', { A: 1, B: 2, C: 3 })
+
+// example 2
+
+// class Click {
+//   handlers: Function[] = [];
+
+//   subscribe(handler: Function): void {
+//     this.handlers.push(handler);
+//   }
+
+//   unsubscribe(handler: Function): void {
+//     this.handlers = this.handlers.filter((e: Function) => e !== handler);
+//   }
+
+//   fire(message: string, scope?: any): void {
+//     if (!scope) {
+//       scope = this;
+//     }
+
+//     this.handlers.forEach((e: Function) => e.call(scope, message));
+//   }
+// }
+
+// class Application {
+//   main(): void {
+//     const callback = (message: string) => {
+//       console.log(message);
+//     };
+
+//     const click = new Click();
+
+//     click.subscribe(callback);
+//     click.fire("event 1");
+//     click.unsubscribe(callback);
+//     click.fire("event 2");
+//     click.subscribe(callback);
+//     click.fire("event 3");
+//   }
+// }

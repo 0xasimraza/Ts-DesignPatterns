@@ -1,69 +1,124 @@
-interface IShippingCompany {
-  calculate: (parcel: Parcel) => string;
-}
+// example 1
+// The Strategy Pattern Concept
 
-class Parcel {
-  from: string;
-  to: string;
-  weight: number;
+class ObjectContext {
+  // This is the object whose behavior will change
 
-  constructor(weight: number, from: string, to: string) {
-    this.weight = weight;
-    from = from;
-    this.to = to;
+  request(strategy: IStrategyConstructor) {
+    // The request is handled by the class passed in
+    return new strategy()
   }
 }
 
-class Shipping {
-  private company: IShippingCompany;
+interface IStrategyConstructor {
+  // A Constructor for the IStrategy
+  new(): IStrategy
+}
 
-  setStrategy(company: IShippingCompany): void {
-    this.company = company;
-  }
+interface IStrategy {
+  // A strategy Interface
+  method(): string
+}
 
-  calculate(product: Parcel): string {
-    return this.company.calculate(product);
+class ConcreteStrategyA implements IStrategy {
+  // A Concrete Strategy Subclass
+
+  method() {
+    return 'I am ConcreteStrategyA'
   }
 }
 
-class Fedex implements IShippingCompany {
-  calculate(parcel: Parcel): string {
-    //do something ...
+class ConcreteStrategyB implements IStrategy {
+  // A Concrete Strategy Subclass
 
-    return "50$";
+  method() {
+    return 'I am ConcreteStrategyB'
   }
 }
 
-class Usps implements IShippingCompany {
-  calculate(parcel: Parcel): string {
-    //do something ...
+class ConcreteStrategyC implements IStrategy {
+  // A Concrete Strategy Subclass
 
-    return "70$";
+  method() {
+    return 'I am ConcreteStrategyC'
   }
 }
 
-class Ups implements IShippingCompany {
-  calculate(parcel: Parcel): string {
-    //do something ...
+// The Client
+const OBJECT_CONTEXT = new ObjectContext()
 
-    return "35$";
-  }
-}
+console.log(OBJECT_CONTEXT.request(ConcreteStrategyA).method())
+console.log(OBJECT_CONTEXT.request(ConcreteStrategyB).method())
+console.log(OBJECT_CONTEXT.request(ConcreteStrategyC).method())
 
-class Application {
-  main(): void {
-    const parcel = new Parcel(10, "Shiraz", "Dubai");
+// example 2
 
-    const fedex = new Fedex();
-    const ups = new Ups();
-    const usps = new Usps();
+// interface IShippingCompany {
+//   calculate: (parcel: Parcel) => string;
+// }
 
-    const shipping = new Shipping();
-    shipping.setStrategy(fedex);
-    console.log("Fedex cost: ", shipping.calculate(parcel));
-    shipping.setStrategy(ups);
-    console.log("UPS cost: ", shipping.calculate(parcel));
-    shipping.setStrategy(usps);
-    console.log("USPS cost: ", shipping.calculate(parcel));
-  }
-}
+// class Parcel {
+//   from: string;
+//   to: string;
+//   weight: number;
+
+//   constructor(weight: number, from: string, to: string) {
+//     this.weight = weight;
+//     from = from;
+//     this.to = to;
+//   }
+// }
+
+// class Shipping {
+//   private company: IShippingCompany;
+
+//   setStrategy(company: IShippingCompany): void {
+//     this.company = company;
+//   }
+
+//   calculate(product: Parcel): string {
+//     return this.company.calculate(product);
+//   }
+// }
+
+// class Fedex implements IShippingCompany {
+//   calculate(parcel: Parcel): string {
+//     //do something ...
+
+//     return "50$";
+//   }
+// }
+
+// class Usps implements IShippingCompany {
+//   calculate(parcel: Parcel): string {
+//     //do something ...
+
+//     return "70$";
+//   }
+// }
+
+// class Ups implements IShippingCompany {
+//   calculate(parcel: Parcel): string {
+//     //do something ...
+
+//     return "35$";
+//   }
+// }
+
+// class Application {
+//   main(): void {
+//     const parcel = new Parcel(10, "Shiraz", "Dubai");
+
+//     const fedex = new Fedex();
+//     const ups = new Ups();
+//     const usps = new Usps();
+
+//     const shipping = new Shipping();
+//     shipping.setStrategy(fedex);
+//     console.log("Fedex cost: ", shipping.calculate(parcel));
+//     shipping.setStrategy(ups);
+//     console.log("UPS cost: ", shipping.calculate(parcel));
+//     shipping.setStrategy(usps);
+//     console.log("USPS cost: ", shipping.calculate(parcel));
+//   }
+// }

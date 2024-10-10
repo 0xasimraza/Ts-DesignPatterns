@@ -1,58 +1,135 @@
+// example 1
+
+// The Visitor Pattern Concept
+
 interface IVisitor {
-  visit(part: Part): void;
+  // An interface that custom Visitors should implement
+  visit(part: Part): void
 }
 
 interface IVisitable {
-  accept(visitor: IVisitor): void;
+  // An interface the concrete objects should implement that allows
+  // the visitor to traverse a hierarchical structure of objects
+  accept(visitor: IVisitor): void
 }
 
 class Part implements IVisitable {
-  name: string;
-  value: number;
-  parts: Set<Part>;
+  // a.k.a Element. An Object that can be part of any hierarchy
+  name: string
+  value: number
+  parts: Set<Part>
 
   constructor(name: string, value: number, parent?: Part) {
-    this.name = name;
-    this.value = value;
-    this.parts = new Set();
+    this.name = name
+    this.value = value
+    this.parts = new Set()
     if (parent) {
-      parent.parts.add(this);
+      parent.parts.add(this)
     }
   }
 
   accept(visitor: IVisitor) {
-    this.parts.forEach((part: Part) => {
-      part.accept(visitor);
-    });
-    visitor.visit(this);
+    // required by the Visitor that will traverse
+    this.parts.forEach((part) => {
+      part.accept(visitor)
+    })
+    visitor.visit(this)
   }
 }
+
+// The Client
+// Creating an example object hierarchy.
+const Part_A = new Part('A', 101)
+const Part_B = new Part('B', 305, Part_A)
+const Part_C = new Part('C', 185, Part_A)
+const Part_D = new Part('D', -30, Part_B)
+
+// Now Rather than changing the Part class to support custom
+// operations, we can utilise the accept method that was
+// implemented in the Part class because of the addition of
+// the IVisitable interface
 
 class PrintPartNamesVisitor implements IVisitor {
+  // Create a visitor that prints the part names
   visit(part: Part) {
-    console.log(part.name);
+    console.log(part.name)
   }
 }
+
+// Using the PrintPartNamesVisitor to traverse the object hierarchy
+Part_A.accept(new PrintPartNamesVisitor())
 
 class CalculatePartTotalsVisitor implements IVisitor {
-  totalValue = 0;
+  // Create a visitor that totals the part values
+  totalValue = 0
 
   visit(part: Part) {
-    this.totalValue += part.value;
+    this.totalValue += part.value
   }
 }
 
-class Application {
-  main(): void {
-    const partA = new Part("A", 101);
-    const partB = new Part("B", 305, partA);
-    const partC = new Part("C", 185, partA);
-    const partD = new Part("D", -30, partB);
+// Using the CalculatePartTotalsVisitor to traverse the
+// object hierarchy
+const CALC_TOTALS_VISITOR = new CalculatePartTotalsVisitor()
+Part_A.accept(CALC_TOTALS_VISITOR)
+console.log(CALC_TOTALS_VISITOR.totalValue)
 
-    partA.accept(new PrintPartNamesVisitor());
+// example 2
+// interface IVisitor {
+//   visit(part: Part): void;
+// }
 
-    const calcTotalVisits = new CalculatePartTotalsVisitor();
-    partA.accept(calcTotalVisits);
-    console.log(calcTotalVisits.totalValue);
-  }
-}
+// interface IVisitable {
+//   accept(visitor: IVisitor): void;
+// }
+
+// class Part implements IVisitable {
+//   name: string;
+//   value: number;
+//   parts: Set<Part>;
+
+//   constructor(name: string, value: number, parent?: Part) {
+//     this.name = name;
+//     this.value = value;
+//     this.parts = new Set();
+//     if (parent) {
+//       parent.parts.add(this);
+//     }
+//   }
+
+//   accept(visitor: IVisitor) {
+//     this.parts.forEach((part: Part) => {
+//       part.accept(visitor);
+//     });
+//     visitor.visit(this);
+//   }
+// }
+
+// class PrintPartNamesVisitor implements IVisitor {
+//   visit(part: Part) {
+//     console.log(part.name);
+//   }
+// }
+
+// class CalculatePartTotalsVisitor implements IVisitor {
+//   totalValue = 0;
+
+//   visit(part: Part) {
+//     this.totalValue += part.value;
+//   }
+// }
+
+// class Application {
+//   main(): void {
+//     const partA = new Part("A", 101);
+//     const partB = new Part("B", 305, partA);
+//     const partC = new Part("C", 185, partA);
+//     const partD = new Part("D", -30, partB);
+
+//     partA.accept(new PrintPartNamesVisitor());
+
+//     const calcTotalVisits = new CalculatePartTotalsVisitor();
+//     partA.accept(calcTotalVisits);
+//     console.log(calcTotalVisits.totalValue);
+//   }
+// }
