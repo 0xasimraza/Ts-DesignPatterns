@@ -18,5 +18,9 @@ https://refactoring.guru/design-patterns
 
 Go Patterns: https://github.com/tmrts/go-patterns
 
+</n>
+
+https://www.digitalocean.com/community/tutorials/gangs-of-four-gof-design-patterns
+
 
 ![alt text](https://miro.medium.com/v2/resize:fit:720/format:webp/0*u3LvRB25YEbv_J2Y?raw=true)
